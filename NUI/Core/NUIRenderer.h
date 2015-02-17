@@ -83,6 +83,7 @@
 
 + (void)renderTableViewCell:(UITableViewCell*)cell;
 + (void)renderTableViewCell:(UITableViewCell*)cell withClass:(NSString*)className;
++ (void)renderSelectionDependentPropertiesOnTableViewCell:(UITableViewCell*)cell selected:(BOOL)selected;
 
 + (void)renderToolbar:(UIToolbar*)bar;
 + (void)renderToolbar:(UIToolbar*)bar withClass:(NSString*)className;
@@ -113,4 +114,5 @@
 
 + (void)setRerenderOnOrientationChange:(BOOL)rerender;
 
++ (void)changeStylesheet:(NSString*)name;
 @end

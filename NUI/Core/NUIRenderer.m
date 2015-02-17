@@ -168,6 +168,11 @@ static NUIRenderer *gInstance = nil;
     [NUITableViewCellRenderer render:cell withClass:className];
 }
 
++ (void)renderSelectionDependentPropertiesOnTableViewCell:(UITableViewCell*)cell selected:(BOOL)selected
+{
+    [NUITableViewCellRenderer renderSelectionDependentProperties:cell selected:selected];
+}
+
 + (void)renderToolbar:(UIToolbar*)bar
 {
     [NUIToolbarRenderer render:bar withClass:@"Toolbar"];
@@ -339,4 +344,11 @@ static NUIRenderer *gInstance = nil;
     [CATransaction flush];
 }
 
+
++ (void)changeStylesheet:(NSString*)name
+{
+    [NUISettings loadStylesheetByName:name];
+    [NUIRenderer rerender];
+    [CATransaction flush];
+}
 @end

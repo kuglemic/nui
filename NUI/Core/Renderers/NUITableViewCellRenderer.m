@@ -28,6 +28,9 @@
         [NUIRenderer renderLabel:cell.detailTextLabel withClass:className withSuffix:@"Detail"];
     }
     
+    if ([NUISettings hasProperty:@"tint-color" withClass:className]) {
+        cell.tintColor = [NUISettings getColor:@"tint-color" withClass:className];
+    }
 }
 
 + (void)sizeDidChange:(UITableViewCell*)cell
@@ -37,36 +40,38 @@
 
 + (void)renderSizeDependentProperties:(UITableViewCell*)cell
 {
+    [self renderSelectionDependentProperties:cell selected:cell.selected];
+}
+
++ (void)renderSelectionDependentProperties:(UITableViewCell*)cell selected:(BOOL)selected
+{
     NSString *className = cell.nuiClass;
-    
-    // Set background color
-    if ([NUISettings hasProperty:@"background-color" withClass:className]) {
-        UIImage *colorImage = [NUISettings getImageFromColor:@"background-color" withClass:className];
-        cell.backgroundView = [[UIImageView alloc] initWithImage:colorImage];
-    }
-    
-    // Set background gradient
-    if ([NUISettings hasProperty:@"background-color-top" withClass:className]) {
-        UIImage *gradientImage = [NUIGraphics
-                                  gradientImageWithTop:[NUISettings getColor:@"background-color-top" withClass:className]
-                                  bottom:[NUISettings getColor:@"background-color-bottom" withClass:className]
-                                  frame:cell.bounds];
-        cell.backgroundView = [[UIImageView alloc] initWithImage:gradientImage];
-    }
-    
-    // Set selected background color
-    if ([NUISettings hasProperty:@"background-color-selected" withClass:className]) {
-        UIImage *colorImage = [NUISettings getImageFromColor:@"background-color-selected" withClass:className];
-        cell.selectedBackgroundView = [[UIImageView alloc] initWithImage:colorImage];
-    }
-    
-    // Set selected background gradient
-    if ([NUISettings hasProperty:@"background-color-top-selected" withClass:className]) {
-        UIImage *gradientImage = [NUIGraphics
-                                  gradientImageWithTop:[NUISettings getColor:@"background-color-top-selected" withClass:className]
-                                  bottom:[NUISettings getColor:@"background-color-bottom-selected" withClass:className]
-                                  frame:cell.bounds];
-        cell.selectedBackgroundView = [[UIImageView alloc] initWithImage:gradientImage];
+
+    if(selected) {
+        if ([NUISettings hasProperty:@"background-color-selected" withClass:className]) {
+            UIImage *colorImage = [NUISettings getImageFromColor:@"background-color-selected" withClass:className];
+            cell.backgroundView = [[UIImageView alloc] initWithImage:colorImage];
+        }
+        
+        if ([NUISettings hasProperty:@"checkmark-accessory-on-selection" withClass:className]) {
+            BOOL showCheckmark = [NUISettings getBoolean:@"checkmark-accessory-on-selection" withClass:className];
+            if(showCheckmark) {
+                cell.accessoryType = UITableViewCellAccessoryCheckmark;
+            }
+        }
+        
+    } else {
+        if ([NUISettings hasProperty:@"background-color" withClass:className]) {
+            UIImage *colorImage = [NUISettings getImageFromColor:@"background-color" withClass:className];
+            cell.backgroundView = [[UIImageView alloc] initWithImage:colorImage];
+        }
+        
+        if ([NUISettings hasProperty:@"checkmark-accessory-on-selection" withClass:className]) {
+            BOOL showCheckmark = [NUISettings getBoolean:@"checkmark-accessory-on-selection" withClass:className];
+            if(showCheckmark) {
+                cell.accessoryType = UITableViewCellAccessoryNone;
+            }
+        }
     }
 }
 

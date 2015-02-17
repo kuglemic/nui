@@ -8,7 +8,6 @@
 
 #import "NUIButtonRenderer.h"
 #import "NUIViewRenderer.h"
-#import "UIButton+NUI.h"
 
 @implementation NUIButtonRenderer
 
@@ -24,7 +23,7 @@
             [button.layer.sublayers[1] setOpacity:0.0f];
         }
     }
-
+ 
     // Set padding
     if ([NUISettings hasProperty:@"padding" withClass:className]) {
         [button setTitleEdgeInsets:[NUISettings getEdgeInsets:@"padding" withClass:className]];
@@ -56,15 +55,11 @@
                                           gradientLayerWithTop:[NUISettings getColor:@"background-color-top" withClass:className]
                                           bottom:[NUISettings getColor:@"background-color-bottom" withClass:className]
                                           frame:button.bounds];
-        
-        if (button.gradientLayer) {
-            [button.layer replaceSublayer:button.gradientLayer with:gradientLayer];
-        } else {
-            int backgroundLayerIndex = [button.layer.sublayers count] == 1 ? 0 : 1;
-            [button.layer insertSublayer:gradientLayer atIndex:backgroundLayerIndex];
+        int backgroundLayerIndex = [button.layer.sublayers count] == 1 ? 0 : 1;
+        if (button.isNUIApplied) {
+            [[button.layer.sublayers objectAtIndex:backgroundLayerIndex] removeFromSuperlayer];
         }
-        
-        button.gradientLayer = gradientLayer;
+        [button.layer insertSublayer:gradientLayer atIndex:backgroundLayerIndex];
     }
     
     // Set background image
