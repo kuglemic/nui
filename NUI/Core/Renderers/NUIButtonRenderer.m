@@ -8,6 +8,7 @@
 
 #import "NUIButtonRenderer.h"
 #import "NUIViewRenderer.h"
+#import "UIButton+NUI.h"
 
 @implementation NUIButtonRenderer
 
@@ -23,7 +24,7 @@
             [button.layer.sublayers[1] setOpacity:0.0f];
         }
     }
- 
+
     // Set padding
     if ([NUISettings hasProperty:@"padding" withClass:className]) {
         [button setTitleEdgeInsets:[NUISettings getEdgeInsets:@"padding" withClass:className]];
@@ -55,11 +56,15 @@
                                           gradientLayerWithTop:[NUISettings getColor:@"background-color-top" withClass:className]
                                           bottom:[NUISettings getColor:@"background-color-bottom" withClass:className]
                                           frame:button.bounds];
-        int backgroundLayerIndex = [button.layer.sublayers count] == 1 ? 0 : 1;
-        if (button.isNUIApplied) {
-            [[button.layer.sublayers objectAtIndex:backgroundLayerIndex] removeFromSuperlayer];
+        
+        if (button.gradientLayer) {
+            [button.layer replaceSublayer:button.gradientLayer with:gradientLayer];
+        } else {
+            int backgroundLayerIndex = [button.layer.sublayers count] == 1 ? 0 : 1;
+            [button.layer insertSublayer:gradientLayer atIndex:backgroundLayerIndex];
         }
-        [button.layer insertSublayer:gradientLayer atIndex:backgroundLayerIndex];
+        
+        button.gradientLayer = gradientLayer;
     }
     
     // Set background image
@@ -147,6 +152,21 @@
     }
     if ([NUISettings hasProperty:@"text-shadow-color-disabled" withClass:className]) {
         [button setTitleShadowColor:[NUISettings getColor:@"text-shadow-color-disabled" withClass:className] forState:UIControlStateDisabled];
+    }
+    
+    // Set image tint color (by Appdafuer)
+    if ([NUISettings hasProperty:@"image-highlighted-color" withClass:className]) {
+        if (button.imageView.image) {
+            UIColor* imageSelectedColor = [NUISettings getColor:@"image-highlighted-color" withClass:className];
+            [button setImage:[button.imageView.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateHighlighted];
+        }
+    }
+    
+    if ([NUISettings hasProperty:@"image-selected-color" withClass:className]) {
+        if (button.imageView.image) {
+            UIColor* imageSelectedColor = [NUISettings getColor:@"image-selected-color" withClass:className];
+            [button setImage:[button.imageView.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateSelected];
+        }
     }
     
     // title insets
