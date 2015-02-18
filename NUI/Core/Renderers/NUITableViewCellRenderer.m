@@ -46,11 +46,10 @@
 + (void)renderSelectionDependentProperties:(UITableViewCell*)cell selected:(BOOL)selected
 {
     NSString *className = cell.nuiClass;
-
+    
     if(selected) {
         if ([NUISettings hasProperty:@"background-color-selected" withClass:className]) {
-            UIImage *colorImage = [NUISettings getImageFromColor:@"background-color-selected" withClass:className];
-            cell.backgroundView = [[UIImageView alloc] initWithImage:colorImage];
+            cell.backgroundColor = [NUISettings getColor:@"background-color-selected" withClass:className];
         }
         
         if ([NUISettings hasProperty:@"checkmark-accessory-on-selection" withClass:className]) {
@@ -62,8 +61,7 @@
         
     } else {
         if ([NUISettings hasProperty:@"background-color" withClass:className]) {
-            UIImage *colorImage = [NUISettings getImageFromColor:@"background-color" withClass:className];
-            cell.backgroundView = [[UIImageView alloc] initWithImage:colorImage];
+            cell.backgroundColor = [NUISettings getColor:@"background-color" withClass:className];
         }
         
         if ([NUISettings hasProperty:@"checkmark-accessory-on-selection" withClass:className]) {
