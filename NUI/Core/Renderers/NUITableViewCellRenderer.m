@@ -31,6 +31,15 @@
     if ([NUISettings hasProperty:@"tint-color" withClass:className]) {
         cell.tintColor = [NUISettings getColor:@"tint-color" withClass:className];
     }
+    
+    if ([NUISettings hasProperty:@"background-color" withClass:className]) {
+        cell.backgroundColor = [NUISettings getColor:@"background-color" withClass:className];
+    }
+    
+    if ([NUISettings hasProperty:@"background-color-selected" withClass:className]) {
+        UIImage *colorImage = [NUISettings getImageFromColor:@"background-color-selected" withClass:className];
+        cell.selectedBackgroundView = [[UIImageView alloc] initWithImage:colorImage];
+    }
 }
 
 + (void)sizeDidChange:(UITableViewCell*)cell
@@ -46,11 +55,8 @@
 + (void)renderSelectionDependentProperties:(UITableViewCell*)cell selected:(BOOL)selected
 {
     NSString *className = cell.nuiClass;
-    
+
     if(selected) {
-        if ([NUISettings hasProperty:@"background-color-selected" withClass:className]) {
-            cell.backgroundColor = [NUISettings getColor:@"background-color-selected" withClass:className];
-        }
         
         if ([NUISettings hasProperty:@"checkmark-accessory-on-selection" withClass:className]) {
             BOOL showCheckmark = [NUISettings getBoolean:@"checkmark-accessory-on-selection" withClass:className];
@@ -60,10 +66,6 @@
         }
         
     } else {
-        if ([NUISettings hasProperty:@"background-color" withClass:className]) {
-            cell.backgroundColor = [NUISettings getColor:@"background-color" withClass:className];
-        }
-        
         if ([NUISettings hasProperty:@"checkmark-accessory-on-selection" withClass:className]) {
             BOOL showCheckmark = [NUISettings getBoolean:@"checkmark-accessory-on-selection" withClass:className];
             if(showCheckmark) {
